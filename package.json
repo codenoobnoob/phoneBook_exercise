@@ -6,14 +6,19 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build:ui": "rd build /S /Q && cd../../Mooc_fullstackdev_2021/osa2/puhelinluettelo/ && npm run build --prod && xcopy build ..\\..\\..\\Fullstack_repos\\Puhelinluettelo\\build\\ /s",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push origin master && npm run deploy",
+    "logs:prod": "heroku logs --tail"
+
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codenoobnoob/phoneBook_exercise.git"
   },
   "author": "Patrik Hellström",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/codenoobnoob/phoneBook_exercise/issues"
   },
