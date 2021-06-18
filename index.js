@@ -61,15 +61,15 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  const existingNumber = persons.find((person) => person.name === body.name);
-  if (body.name && body.number && !existingNumber) {
+  const isExistingPerson = persons.some((person) => person.name === body.name);
+  if (body.name && body.number && !isExistingPerson) {
     newPerson = {
       id: generateNewId(),
       name: body.name,
       number: body.number,
     };
     persons = persons.concat(newPerson);
-    response.status(201).end(`person ${body.name} created!`);
+    response.status(201).send(newPerson);
   } else {
     response.status(400).json({
       error: `name must be unique`,
