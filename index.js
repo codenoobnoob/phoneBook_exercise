@@ -1,3 +1,4 @@
+require("dotenv").config();
 const Person = require("./models/contact");
 const { response, request } = require("express");
 const express = require("express");
@@ -68,12 +69,15 @@ app.put("/api/persons/:id", (request, response) => {
       console.log("error while updating data in MongoDB: ", error);
     });
 });
-
+// Deletes the wrong person, always the first one in the table
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  Person.findOneAndDelete(id).then(() => {
-    response.status(204).end();
-  });
+  console.log(id);
+  Person.findByIdAndRemove(id)
+    .then(() => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/info", (request, response) => {
