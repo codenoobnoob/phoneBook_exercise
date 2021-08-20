@@ -72,7 +72,6 @@ app.put("/api/persons/:id", (request, response) => {
 // Deletes the wrong person, always the first one in the table
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  console.log(id);
   Person.findByIdAndRemove(id)
     .then(() => {
       response.status(204).end();
@@ -89,15 +88,15 @@ app.get("/info", (request, response) => {
   });
 });
 
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "unknown endpoint" });
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
 };
 app.use(unknownEndpoint);
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (error, request, response, next) => {
   console.log(error.message, error.name, error);
   if (error.name == "CastError") {
-    res.status(400).send({ error: "malformatted id" });
+    response.status(400).send({ error: "malformatted id" });
   } else {
   }
   next(error);
