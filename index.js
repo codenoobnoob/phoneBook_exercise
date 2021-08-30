@@ -25,14 +25,19 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   Person.findById(id)
     .then((result) => {
-      response.json(result);
+      if (result) {
+        response.json(result);
+      } else {
+        response.status(404).end();
+      }
     })
     .catch((error) => {
-      response.status(404).end();
+      console.log(error);
+      next(error);
     });
 });
 
@@ -59,18 +64,23 @@ app.post("/api/persons", (request, response) => {
   });
 });
 
-app.put("/api/persons/:id", (request, response) => {
+app.put("/api/persons/:id", (request, response, next) => {
   const body = request.body;
-  Person.findByIdAndUpdate(body.id, { number: body.number }, { new: true })
-    .then((returnedPerson) => {
-      response.status(201).send(returnedPerson);
-    })
-    .catch((error) => {
-      console.log("error while updating data in MongoDB: ", error);
-    });
+  Person.findByIdAndUpdate(
+    request.params.id,
+    { number: body.number },
+    { new: true },
+    (error, returnedPerson) => {
+      if (error) {
+        response.status(400).send(error);
+      } else {
+        response.status(201).send(returnedPerson);
+      }
+    }
+  ).catch((error) => next(error));
 });
 // Deletes the wrong person, always the first one in the table
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   Person.findByIdAndRemove(id)
     .then(() => {
