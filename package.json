@@ -10,7 +10,8 @@
     "build:ui": "rd build /S /Q && cd../Frontend/phonebook_frontend/ && npm run build --prod && xcopy build ..\\..\\Puhelinluettelo\\build\\ /s",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push origin master && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.32.0",
     "nodemon": "^2.0.7"
   }
 }
